@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <h1>Witaj, {{ user.username }}! Zobacz oferty mieszkań dla dzielnicy {{ search_params.district }}:</h1>
+        {% for offer in offers %}
+        <div><p><b>Cena: {{ offer.price }}</b><br>
+            Cena za m2: {{ offer.priceM2 }}<br>
+            Lokalizacja: {{ offer.location }}<br>
+            Liczba pokoi: {{ offer.rooms_no }}<br>
+            link do oferty: {{ offer.link }}            
+        </p></div>
+        {% endfor %}
+
+        <h1>Ponadto, w naszej bazie mamy następujące oferty:</h1>
+        {% for offer in flats %}
+        <div><p><b>Cena: {{ offer.price }}</b><br>
+            Cena za m2: {{ offer.pricePerM2 }}<br>
+            Lokalizacja: {{ offer.district }}<br>
+            Liczba pokoi: {{ offer.roomsNo }}<br>
+            link do oferty: {{ offer.link }}            
+        </p></div>
+        {% endfor %}
+
+{% endblock %}

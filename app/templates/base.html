@@ -1,0 +1,27 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Mieszkania</title>
+        {% else %}
+        <title>Witaj w wyszukiwarce mieszkań!</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Mieszkania: 
+            <a href="{{ url_for('index') }}">Strona główna</a>
+            <a href="{{ url_for('login') }}">Logowanie</a>
+            <a href="{{ url_for('search') }}">Wyszukiwanie</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
