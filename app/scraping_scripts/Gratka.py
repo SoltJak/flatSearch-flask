@@ -5,7 +5,7 @@
 import bs4, requests, re, json, pprint
 
 baseURL = 'https://gratka.pl/nieruchomosci/mieszkania/warszawa/'
-URL_opt1 = '/sprzedaz?'
+URL_opt1 = '?'
 URL_opt2 = '&sort=newest'
 Links = []
 flatOfferArray = []

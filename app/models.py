@@ -21,3 +21,16 @@ class Flat(db.Model):
 
     def __repr__(self):
         return 'Mieszkanie: {}m2, pokoi: {}, w cenie: {}PLN, Dzielnica: {}'.format(self.size, self.roomsNo, self.price, self.district)
+
+class Flatcurrent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(240), index=True)
+    district = db.Column(db.String(64), index=True)
+    roomsNo = db.Column(db.String(64))
+    size = db.Column(db.String(64))
+    price = db.Column(db.String(64))
+    pricePerM2 = db.Column(db.String(64))
+    link = db.Column(db.String(64))
+
+    def __repr__(self):
+        return 'Mieszkanie: {}m2, pokoi: {}, w cenie: {}PLN, Dzielnica: {}'.format(self.size, self.roomsNo, self.price, self.district)

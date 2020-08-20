@@ -11,14 +11,4 @@
         </p></div>
         {% endfor %}
 
-        <h1>Ponadto w bazie mamy następujące oferty</h1>
-        {% for offer in flats %}
-        <div><p><b>Cena: {{ offer.price }}</b><br>
-            Cena za m2: {{ offer.pricePerM2 }}<br>
-            Lokalizacja: {{ offer.district }}<br>
-            Liczba pokoi: {{ offer.roomsNo }}<br>
-            link do oferty: {{ offer.link }}            
-        </p></div>
-        {% endfor %}
-
 {% endblock %}

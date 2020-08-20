@@ -5,24 +5,24 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.district.label }}<br>
-            {{ form.district(size=32) }}<br>
-            {% for error in form.district.errors %}
+            {{ form.location.label }}<br>
+            {{ form.location(size=32) }}<br>
+            {% for error in form.location.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.roomsNo.label }}<br>
-            {{ form.roomsNo(size=32) }}<br>
+            {{ form.roomsNoSearch.label }}<br>
+            {{ form.roomsNoSearch(size=32) }}<br>
         </p>
         <p>
-            {{ form.sizeMin.label }} 
-            {{ form.sizeMin(size=32) }} 
+            {{ form.flatSizeMin.label }} 
+            {{ form.flatSizeMin(size=32) }} 
             m2<br>
         </p>
         <p>
-            {{ form.sizeMax.label }} 
-            {{ form.sizeMax(size=32) }} 
+            {{ form.flatSizeMax.label }} 
+            {{ form.flatSizeMax(size=32) }} 
             m2<br>
         </p>
         <p>
@@ -36,13 +36,18 @@
             zł<br>
         </p>
         <p>
-            {{ form.priceM2Min.label }} 
-            {{ form.priceM2Min(size=32) }} 
+            {{ form.pricePerM2min.label }} 
+            {{ form.pricePerM2min(size=32) }} 
             zł/m2<br>
         </p>
         <p>
-            {{ form.priceM2Max.label }} 
-            {{ form.priceM2Max(size=32) }} 
+            {{ form.pricePerM2max.label }} 
+            {{ form.pricePerM2max(size=32) }} 
+            zł/m2<br>
+        </p>
+        <p>
+            {{ form.market.label }} 
+            {{ form.market(size=32) }} 
             zł/m2<br>
         </p>
         <p>{{ form.submit() }}</p>

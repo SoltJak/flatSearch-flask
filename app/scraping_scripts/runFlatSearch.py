@@ -2,11 +2,13 @@
 # runFlatSearch.py - main run file for flat offer search
 # import NieruchomosciOnline, OLX, Gratka, Gumtree, Sprzedajemy, DomiPorta
 from app import app, db
-from app.scraping_scripts import NieruchomosciOnline, Gumtree
-from app.models import User, Flat
+from app.scraping_scripts import NieruchomosciOnline, OLX, Gratka, Gumtree
+from app.models import User, Flat, Flatcurrent
 import bs4, requests, json, logging, pprint
 
 def runFlatSearch(search_params):
+
+    Flatcurrent.query.delete()
 
     # # flatOfferArray = []
     # # 1. Nieruchomosci-Online.pl
@@ -24,12 +26,34 @@ def runFlatSearch(search_params):
     #         db.session.add(offer)
     #         # offerNum += 1
 
+    # # 2. OLX.pl
+    # Links = OLX.getOfferLinks(search_params)
+    # for link in Links:
+    #     if 'www.otodom.pl' in link:
+    #         offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOTODOM(link)
+    #     else:
+    #         offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOLX(link)
+    #     pricePerM2 = str(round(float(price) / float(flatSize), 0))
+    #     offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+    #     db.session.add(offer)
+
+    # 3. Gratka.pl
+    Links = Gratka.getOfferLinks(search_params)
+    for link in Links:
+        offerTitle, flatSize, roomsNo, price, offerSource = Gratka.getOfferDetailsGratka(link)
+        pricePerM2 = str(round(float(price) / float(flatSize), 0))
+        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)        
+        db.session.add(offer)
+        db.session.add(offerCurrent)
+
     # 4. Gumtree.pl
     Links = Gumtree.getOfferLinks(search_params)
     for link in Links:
         offerTitle, flatSize, roomsNo, price, offerSource = Gumtree.getOfferDetailsGumtree(link)
-        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, link=link)
         pricePerM2 = str(round(float(price) / float(flatSize), 0))
+        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)        
 
         # Check if criterias are met for portals that cannot specify all conditions from query
         if (float(price) / float(flatSize)) > float(search_params['pricePerM2max']):
@@ -37,6 +61,9 @@ def runFlatSearch(search_params):
         if (float(flatSize) < float(search_params['flatSizeMin']) or float(flatSize) > float(search_params['flatSizeMax'])):
             continue
         db.session.add(offer)
+        db.session.add(offerCurrent)
+
+    db.session.commit()
 
 ####
 
