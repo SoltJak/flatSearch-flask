@@ -88,4 +88,10 @@ def getOfferDetailsSprzedajemy(url):
     priceRaw = offerSoup.find_all('div', class_='priceWrp')[0].span.getText().strip()
     price = ''.join(priceRaw.split()[0:-1])
 
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    #6. Find link to main picture
+    pictureLink = offerSoup.find('img', class_='js-gallerySlide').get('src')
+
+    # #7. Save district
+    # district = queryCriteria['location']
+
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

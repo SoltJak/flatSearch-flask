@@ -75,7 +75,13 @@ def getOfferDetailsGumtree(url):
     price = ''.join(priceRaw.split()[0:-1])
 
     #6. Find picture link
-    if offerSoup.find('div', class_='main').find('img').get('src'):
+    # print('Current gumtree URL: ' + url)
+    if offerSoup.find('div', class_='main') != None:
         pictureLink = offerSoup.find('div', class_='main').find('img').get('src')
+    else:
+        pictureLink = ''
+    
+    # #7. Save district
+    # district = queryCriteria['location']
 
     return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

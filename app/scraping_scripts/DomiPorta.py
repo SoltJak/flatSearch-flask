@@ -64,35 +64,43 @@ def getOfferDetailsDomiPorta(url):
     offerTitleRaw = offerSoup.h1.getText().strip()
     offerTitle = ' '.join(offerTitleRaw.split())
     
-    detailsListNames = list(offerSoup.find_all('dt', class_='features__item_name'))
-    detailsListValues = list(offerSoup.find_all('dd', class_='features__item_value'))
+    detailsContainer = offerSoup.find('ul', class_='features__list-2')
+    detailsListNames = list(detailsContainer.find_all('span', class_='features__item_name'))
+    detailsListValues = list(detailsContainer.find_all('span', class_='features__item_value'))
     for i in range(0, len(detailsListNames)):
         textLine = detailsListNames[i].getText()
         textValue = detailsListValues[i].getText()
         
         # 2. Find flat size
-        if textLine == 'Powierzchnia całkowita:':
+        if textLine == 'Powierzchnia całkowita':
             flatSizeRaw = textValue.strip()
             flatSize = ''.join(flatSizeRaw.split()[0:-1])
             pattern = re.compile('(\d+?)(,)(\d*\d$)')
             if pattern.search(flatSize) != None:
-                flatSize = pattern.search(flatSize)[1] + '.' + pattern.search(flatSize)[3]            
+                flatSize = pattern.search(flatSize)[1] + '.' + pattern.search(flatSize)[3]   
 
         #3. Find number of rooms
-        elif textLine == 'Liczba pokoi: ':
+        elif textLine == 'Liczba pokoi ':
             roomsNo = textValue
 
         #4. Find price of flat
-        elif textLine == 'Cena:':
-            priceRawTemp = textValue
-            priceRawPattern = re.compile('(\d+?)(\s)(\d+?)(\s+?)(zł)')
+        elif textLine == 'Cena':
+            priceRawTemp = textValue.strip()
+            priceRawPattern = re.compile('(\d+?)(\s)?(\d+?)(\s+?)(zł)')
             priceRaw = ''
-            for i in range(1,4):
-                priceRaw = priceRaw + priceRawPattern.search(priceRawTemp)[i]
+            for i in range(1,len(priceRawPattern.search(priceRawTemp).groups())-1):
+                if priceRawPattern.search(priceRawTemp).group(i) != None:
+                    priceRaw = priceRaw + priceRawPattern.search(priceRawTemp).group(i)
             priceRaw = priceRaw + ' zł'
             price = ''.join(priceRaw.split()[0:-1])
 
     #5. Find offer source
     offerSource = 'BD'
+
+    #6. Find picture link
+    if len(list(offerSoup.find_all('img', class_='js-gallery__item--open'))) > 0:
+        pictureLink = list(offerSoup.find_all('img', class_='js-gallery__item--open'))[0].get('src')
+    else:
+        pictureLink = ''
             
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

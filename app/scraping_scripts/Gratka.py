@@ -50,7 +50,6 @@ def downloadPage(url):
 # Function to create a list of offers from a search page
 def getOfferLinks(queryCriteria):
     url = SearchUrl(queryCriteria)
-    print('Search url: ' + url)
     soup = downloadPage(url)
     tempList = list(soup.find_all('a', class_='teaserUnified__anchor'))
     for textLine in tempList:
@@ -101,6 +100,7 @@ def getOfferDetailsGratka(url):
     else:
         pictureLink = ''
 
-    # print('Returning: ' + flatSize + 'm2 - ' + roomsNo + 'p - ' + price + 'zł')
+    # # 7. Save district
+    # district = queryCriteria['location']
 
     return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

@@ -73,31 +73,28 @@ def runFlatSearch(search_params):
         db.session.add(offer)
         db.session.add(offerCurrent)
 
-    # # 5. Sprzedajemy.pl
-    # Links = Sprzedajemy.getOfferLinks(search_params)
-    # for link in Links:
-    #     offerTitle, flatSize, roomsNo, price, offerSource = Sprzedajemy.getOfferDetailsSprzedajemy(link)
-    #     pricePerM2 = str(round(float(price) / float(flatSize), 0))
-    #     offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-    #     offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)        
-    #     db.session.add(offer)
-    #     db.session.add(offerCurrent)
+    # 5. Sprzedajemy.pl
+    Links = Sprzedajemy.getOfferLinks(search_params)
+    for link in Links:
+        offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = Sprzedajemy.getOfferDetailsSprzedajemy(link)
+        pricePerM2 = str(round(float(price) / float(flatSize), 0))
+        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
+        db.session.add(offer)
+        db.session.add(offerCurrent)
 
-    # # 6. Domiporta.pl
-    # Links = DomiPorta.getOfferLinks(search_params)
-    # for link in Links:
-    #     offerTitle, flatSize, roomsNo, price, offerSource = DomiPorta.getOfferDetailsDomiPorta(link)
-    #     pricePerM2 = str(round(float(price) / float(flatSize), 0))
-    #     offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-    #     offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)        
-    #     db.session.add(offer)
-    #     db.session.add(offerCurrent)
+    # 6. Domiporta.pl
+    Links = DomiPorta.getOfferLinks(search_params)
+    for link in Links:
+        # print('Current domiporta link: ' + link)
+        offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = DomiPorta.getOfferDetailsDomiPorta(link)
+        pricePerM2 = str(round(float(price) / float(flatSize), 0))
+        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
+        db.session.add(offer)
+        db.session.add(offerCurrent)
 
     db.session.commit()
-
-    search_done = 1
-
-    return search_done
 
 ####
 
