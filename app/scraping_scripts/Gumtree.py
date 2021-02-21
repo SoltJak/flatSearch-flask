@@ -74,4 +74,8 @@ def getOfferDetailsGumtree(url):
     priceRaw = offerSoup.find('span', class_='amount').getText()
     price = ''.join(priceRaw.split()[0:-1])
 
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    #6. Find picture link
+    if offerSoup.find('div', class_='main').find('img').get('src'):
+        pictureLink = offerSoup.find('div', class_='main').find('img').get('src')
+
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

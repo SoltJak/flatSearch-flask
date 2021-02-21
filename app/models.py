@@ -17,7 +17,8 @@ class Flat(db.Model):
     size = db.Column(db.String(64))
     price = db.Column(db.String(64))
     pricePerM2 = db.Column(db.String(64))
-    link = db.Column(db.String(64))
+    link = db.Column(db.String(240))
+    pictureLink = db.Column(db.String(240))
 
     def __repr__(self):
         return 'Mieszkanie: {}m2, pokoi: {}, w cenie: {}PLN, Dzielnica: {}'.format(self.size, self.roomsNo, self.price, self.district)
@@ -31,6 +32,7 @@ class Flatcurrent(db.Model):
     price = db.Column(db.String(64))
     pricePerM2 = db.Column(db.String(64))
     link = db.Column(db.String(64))
+    pictureLink = db.Column(db.String(240))
 
     def __repr__(self):
         return 'Mieszkanie: {}m2, pokoi: {}, w cenie: {}PLN, Dzielnica: {}'.format(self.size, self.roomsNo, self.price, self.district)

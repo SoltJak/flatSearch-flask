@@ -2,13 +2,9 @@
 
 {% block content %}
         <h1>Dla podanych kreteriów wyszukiwania znaleziono następujące oferty:</h1>
+        <hr>
         {% for offer in flatsCurrent %}
-        <div><p><b>Cena: {{ offer.price }}</b><br>
-            Cena za m2: {{ offer.pricePerM2 }}<br>
-            Lokalizacja: {{ offer.district }}<br>
-            Liczba pokoi: {{ offer.roomsNo }}<br>
-            link do oferty: <a href="{{ offer.link }}">{{ offer.link }}</a>            
-        </p></div>
+            {% include '_offer.html' %}
         {% endfor %}
 
 {% endblock %}

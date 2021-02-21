@@ -58,28 +58,33 @@ def getOfferDetailsOLX(url):
     # 1. Find offer title
     offerTitle = offerSoup.h1.getText().strip()
 
-    detailsList = list(offerSoup.find_all('table', class_='item'))
+    detailsList = list(offerSoup.find_all('li', class_='offer-details__item'))
     for textLine in detailsList:
         
         # 2. Find flat size
-        if textLine.th.getText() == 'Powierzchnia':
-            flatSizeRaw = textLine.td.getText().strip()
+        if textLine.find('span', class_='offer-details__name').getText() == 'Powierzchnia':
+            flatSizeRaw = textLine.find('strong', class_='offer-details__value').getText().strip()
             flatSize = ''.join(flatSizeRaw.split()[0:-1])
             pattern = re.compile('(\d+?)(,)(\d*\d$)')
             if pattern.search(flatSize) != None:
                 flatSize = pattern.search(flatSize)[1] + '.' + pattern.search(flatSize)[3]
             
         #3. Find number of rooms
-        elif textLine.th.getText() == 'Liczba pokoi':
-            roomsNo = textLine.td.getText().strip()
+        if textLine.find('span', class_='offer-details__name').getText() == 'Liczba pokoi':
+            roomsNoRaw = textLine.find('strong', class_='offer-details__value').getText().strip()
+            roomsNo = roomsNoRaw.split()[0]
 
         #4. Find offer source
-        elif textLine.th.getText() == 'Oferta od':
-            offerSource = textLine.td.getText().strip()
+        elif textLine.find('span', class_='offer-details__name').getText() == 'Oferta od':
+            offerSource = textLine.find('strong', class_='offer-details__value').getText().strip()
 
     #5. Find price of flat
-    priceRaw = offerSoup.find('div', class_='price-label').strong.getText()
+    priceRaw = offerSoup.find('div', class_='pricelabel').strong.getText()
     price = ''.join(priceRaw.split()[0:-1])
+
+    pattern = re.compile('(\d+?)(,)(\d*\d$)')
+    if pattern.search(price) != None:
+        price = pattern.search(price)[1] + '.' + pattern.search(price)[3]
 
     return offerTitle, flatSize, roomsNo, price, offerSource
 

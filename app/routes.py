@@ -8,9 +8,22 @@ import json
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'username': 'Jakobsen'}
+    user = {'username': 'Jakub S'}
+    # Get user search criteria - hardcoded for the moment
+    search_params = {
+        'location': 'bemowo',
+        'priceMin': '1',
+        'priceMax': '500000',
+        'pricePerM2min': '1',
+        'pricePerM2max': '20000',
+        'roomsNoSearch': '2',
+        'flatSizeMin': '30',
+        'flatSizeMax': '55',
+        'market': 'wtorny'
+    }
     flats = Flat.query.all()
-    return render_template('index.html', title='Strona Główna', user=user, search_params=search_params, offers=offers, flats=flats)
+    # return render_template('index.html', title='Strona Główna', user=user, search_params=search_params, offers=offers, flats=flats)
+    return render_template('index.html', title='Strona Główna', user=user, search_params=search_params, flats=flats)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -36,6 +49,9 @@ def search():
         search_paramsTemp["flatSizeMax"] = request.form["flatSizeMax"]
         search_paramsTemp["market"] = request.form["market"]
         search_params = json.dumps(search_paramsTemp)
+
+        # # Clear current database:
+        # Flatcurrent.delete()
 
         return redirect(url_for('search_results', search_params=search_params))
     return render_template('search_criteria.html', title='Wyszukiwanie', form=form)

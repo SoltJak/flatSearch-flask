@@ -50,8 +50,9 @@ def downloadPage(url):
 # Function to create a list of offers from a search page
 def getOfferLinks(queryCriteria):
     url = SearchUrl(queryCriteria)
+    print('Search url: ' + url)
     soup = downloadPage(url)
-    tempList = list(soup.find_all('a', class_='teaser__anchor'))
+    tempList = list(soup.find_all('a', class_='teaserUnified__anchor'))
     for textLine in tempList:
         Links.append(textLine.get('href'))
     return Links
@@ -94,4 +95,12 @@ def getOfferDetailsGratka(url):
         priceRaw = priceRaw + priceRawPattern.search(priceRawTemp)[i]
     price = ''.join(priceRaw.split()[0:-1])
 
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    #6. Find picture link
+    if offerSoup.find('img', class_='gallery__mainImage') != None:
+        pictureLink = offerSoup.find('img', class_='gallery__mainImage').get('src')
+    else:
+        pictureLink = ''
+
+    # print('Returning: ' + flatSize + 'm2 - ' + roomsNo + 'p - ' + price + 'zł')
+
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink

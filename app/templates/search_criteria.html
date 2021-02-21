@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-    <h1>Podaj kryteria wyszukiwania</h1>
+    <!-- <h1>Podaj kryteria wyszukiwania</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -51,5 +52,11 @@
             zł/m2<br>
         </p>
         <p>{{ form.submit() }}</p>
-    </form>
+    </form> -->
+    <h1>Podaj kryteria wyszukiwania</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
 {% endblock %}
