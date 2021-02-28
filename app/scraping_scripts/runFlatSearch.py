@@ -40,19 +40,19 @@ def runFlatSearch(search_params):
     #     db.session.add(offer)
     #     db.session.add(offerCurrent)
 
-    # 3. Gratka.pl
-    Links = Gratka.getOfferLinks(search_params)
-    for link in Links:
-        offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = Gratka.getOfferDetailsGratka(link)
-        pricePerM2 = str(round(float(price) / float(flatSize), 0))
-        # Check if criterias are met for portals that cannot specify all conditions from query
-        if float(pricePerM2) > float(search_params['pricePerM2max']) or float(pricePerM2) < float(search_params['pricePerM2min']):
-            # print('pricePerM2: ' + pricePerM2 + ', maxlimit: ' + search_params['pricePerM2max'] + ' - Continuing')
-            continue
-        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
-        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
-        db.session.add(offer)
-        db.session.add(offerCurrent)
+    # # 3. Gratka.pl
+    # Links = Gratka.getOfferLinks(search_params)
+    # for link in Links:
+    #     offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = Gratka.getOfferDetailsGratka(link)
+    #     pricePerM2 = str(round(float(price) / float(flatSize), 0))
+    #     # Check if criterias are met for portals that cannot specify all conditions from query
+    #     if float(pricePerM2) > float(search_params['pricePerM2max']) or float(pricePerM2) < float(search_params['pricePerM2min']):
+    #         # print('pricePerM2: ' + pricePerM2 + ', maxlimit: ' + search_params['pricePerM2max'] + ' - Continuing')
+    #         continue
+    #     offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+    #     offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
+    #     db.session.add(offer)
+    #     db.session.add(offerCurrent)
 
     # 4. Gumtree.pl
     Links = Gumtree.getOfferLinks(search_params)
