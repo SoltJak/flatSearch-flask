@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DecimalField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DecimalField, SelectMultipleField
 from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
@@ -18,4 +18,5 @@ class SearchForm(FlaskForm):
     pricePerM2min = DecimalField('Cena/m2 min', places=0)
     pricePerM2max = DecimalField('Cena/m2 max', places=0)
     market = SelectField('Rynek', choices=[('wtorny', 'Wtórny'), ('pierwotny', 'Pierwotny')])
+    source = SelectMultipleField('Oferty z', choices=[('gratka', 'Gratka.pl'), ('gumtree', 'Gumtree.pl'), ('domiporta', 'Domiporta.pl'), ('nierOnline', 'Nieruchomości-Online.pl'), ('olx', 'OLX.pl'), ('sprzedajemy', 'Sprzedajemy.pl')])
     submit = SubmitField('Szukaj')

@@ -48,6 +48,7 @@ def search():
         search_paramsTemp["flatSizeMin"] = request.form["flatSizeMin"]
         search_paramsTemp["flatSizeMax"] = request.form["flatSizeMax"]
         search_paramsTemp["market"] = request.form["market"]
+        search_paramsTemp["source"] = request.form.getlist("source")
         search_params = json.dumps(search_paramsTemp)
 
         # # Clear current database:
