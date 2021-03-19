@@ -5,13 +5,13 @@ from app import app, db
 from app.scraping_scripts import NieruchomosciOnline, OLX, Gratka, Gumtree, Sprzedajemy, DomiPorta
 from app.models import User, Flat, Flatcurrent
 import bs4, requests, json, logging, pprint
+import logging, threading
 
 def runFlatSearch(search_params):
 
     Flatcurrent.query.delete()
     db.session.commit()
 
-    # # flatOfferArray = []
     # # 1. Nieruchomosci-Online.pl
     # Links = NieruchomosciOnline.getOfferLinks(search_params)
     # for link in Links:
@@ -28,17 +28,18 @@ def runFlatSearch(search_params):
     #         # offerNum += 1
 
     # 2. OLX.pl
-    # Links = OLX.getOfferLinks(search_params)
-    # for link in Links:
-    #     if 'www.otodom.pl' in link:
-    #         offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOTODOM(link)
-    #     else:
-    #         offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOLX(link)
-    #     pricePerM2 = str(round(float(price) / float(flatSize), 0))
-    #     offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-    #     offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-    #     db.session.add(offer)
-    #     db.session.add(offerCurrent)
+    Links = OLX.getOfferLinks(search_params)
+    for link in Links:
+        if 'www.otodom.pl' in link:
+            offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOTODOM(link)
+        else:
+            # offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOLX(link)
+            pass
+        pricePerM2 = str(round(float(price) / float(flatSize), 0))
+        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+        db.session.add(offer)
+        db.session.add(offerCurrent)
 
     # 3. Gratka.pl
     if 'gratka' in search_params['source']:
@@ -75,28 +76,28 @@ def runFlatSearch(search_params):
             db.session.add(offer)
             db.session.add(offerCurrent)
 
-    # 5. Sprzedajemy.pl
-    if 'sprzedajemy' in search_params['source']:
-        Links = Sprzedajemy.getOfferLinks(search_params)
-        for link in Links:
-            offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = Sprzedajemy.getOfferDetailsSprzedajemy(link)
-            pricePerM2 = str(round(float(price) / float(flatSize), 0))
-            offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
-            offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
-            db.session.add(offer)
-            db.session.add(offerCurrent)
+    # # 5. Sprzedajemy.pl
+    # if 'sprzedajemy' in search_params['source']:
+    #     Links = Sprzedajemy.getOfferLinks(search_params)
+    #     for link in Links:
+    #         offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = Sprzedajemy.getOfferDetailsSprzedajemy(link)
+    #         pricePerM2 = str(round(float(price) / float(flatSize), 0))
+    #         offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+    #         offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
+    #         db.session.add(offer)
+    #         db.session.add(offerCurrent)
 
-    # 6. Domiporta.pl
-    if 'domiporta' in search_params['source']:
-        Links = DomiPorta.getOfferLinks(search_params)
-        for link in Links:
-            # print('Current domiporta link: ' + link)
-            offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = DomiPorta.getOfferDetailsDomiPorta(link)
-            pricePerM2 = str(round(float(price) / float(flatSize), 0))
-            offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
-            offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
-            db.session.add(offer)
-            db.session.add(offerCurrent)
+    # # 6. Domiporta.pl
+    # if 'domiporta' in search_params['source']:
+    #     Links = DomiPorta.getOfferLinks(search_params)
+    #     for link in Links:
+    #         # print('Current domiporta link: ' + link)
+    #         offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = DomiPorta.getOfferDetailsDomiPorta(link)
+    #         pricePerM2 = str(round(float(price) / float(flatSize), 0))
+    #         offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+    #         offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)       
+    #         db.session.add(offer)
+    #         db.session.add(offerCurrent)
 
     db.session.commit()
 

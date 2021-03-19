@@ -55,9 +55,6 @@ def getOfferLinks(queryCriteria):
 def getOfferDetailsOLX(url):
     offerSoup = downloadPage(url)
     
-    # 1. Find offer title
-    offerTitle = offerSoup.h1.getText().strip()
-
     detailsList = list(offerSoup.find_all('li', class_='offer-details__item'))
     for textLine in detailsList:
         
@@ -94,26 +91,31 @@ def getOfferDetailsOTODOM(url):
     # 1. Find offer title
     offerTitle = offerSoup.h1.getText().strip()
 
-    detailsList = list(offerSoup.find(class_='section-overview').find_all('li'))
-    for textLine in detailsList:
-        
-        # 2. Find flat size
-        if textLine.getText().startswith('Powierzchnia') == True:
-            flatSizeRaw = textLine.strong.getText()
-            flatSize = ''.join(flatSizeRaw.split()[0:-1])
-            pattern = re.compile('(\d+?)(,)(\d*\d$)')
-            if pattern.search(flatSize) != None:
-                flatSize = pattern.search(flatSize)[1] + '.' + pattern.search(flatSize)[3]
-            
-        #3. Find number of rooms
-        elif textLine.getText().startswith('Liczba pokoi') == True:
-            roomsNo = textLine.strong.getText()
-
-    #4. Find offer source
-    offerSource = ''
+    try:
+        detailsList = list(offerSoup.find(class_='section-overview').find_all('li'))
+    except Exception as err:
+        print('An exception happened: ' + str(err))
     
-    #5. Find price of flat
-    priceRaw = offerSoup.find(class_='css-1vr19r7').getText()
-    price = ''.join(priceRaw.split()[0:-1])
+    # 1. Find offer title
+    offerTitle = offerSoup.h1.getText().strip()
+
+    # 2. Find flat size
+    pattern = re.compile('(\d+?)(,?)(\d+?)(\sm)')
+    flatSize = pattern.search(offerSoup.select('div[aria-label="Powierzchnia"]')[0].getText())[0].replace(' m','').replace(',','.')
+
+    # 3. Find number of rooms
+    roomsNo = offerSoup.select('div[aria-label="Liczba pokoi"]')[0].getText().replace('Liczba pokoi:','')
+
+    # 4. Find offer source
+    offerSource = offerSoup.select('div[aria-label="Rynek"]')[0].getText().replace('Rynek:','')
+
+    # 5. Find price of the flat
+    price = offerSoup.select('strong[aria-label="Cena"]')[0].getText().replace(' ','').replace('zł','').strip()
+
+    #6. Find link to main picture
+    # if offerSoup.find('img', class_='gallery__mainImage') != None:
+    #     pictureLink = offerSoup.find('img', class_='gallery__mainImage').get('src')
+    # else:
+    pictureLink = ''
 
     return offerTitle, flatSize, roomsNo, price, offerSource
