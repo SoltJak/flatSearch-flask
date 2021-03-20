@@ -22,35 +22,39 @@
             <form action="" method="post" class="form" role="form">
             {{ form.csrf_token() }}
                 <div class="row">
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.location, class='form-control', placeholder='Dzielnica') }}
+                    <div class="col-md-9">
+                        <div class="form-group col-md-6">
+                            {{ wtf.form_field(form.location, class='form-control', placeholder='Dzielnica') }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ wtf.form_field(form.market, class='form-control', placeholder='Rynek') }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ wtf.form_field(form.roomsNoSearch, class='form-control', placeholder='Liczba Pokoi') }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ wtf.form_field(form.flatSizeMin, class='form-control', placeholder='Powierzchnia: od') }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ wtf.form_field(form.flatSizeMax, class='form-control', placeholder='Powierzchia: do') }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ wtf.form_field(form.priceMin, class='form-control', placeholder='Cena: od') }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ wtf.form_field(form.priceMax, class='form-control', placeholder='Cena: do') }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ wtf.form_field(form.pricePerM2min, class='form-control', placeholder='Cena za m2: od') }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ wtf.form_field(form.pricePerM2max, class='form-control', placeholder='Cena za m2: do') }}
+                        </div>
                     </div>
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.market, class='form-control', placeholder='Rynek') }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.source, class='form-control', placeholder='Źródło oferty') }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.roomsNoSearch, class='form-control', placeholder='Liczba Pokoi') }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.flatSizeMin, class='form-control', placeholder='Powierzchnia: od') }}
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{ wtf.form_field(form.flatSizeMax, class='form-control', placeholder='Powierzchia: do') }}
-                    </div>
-                    <div class="form-group col-md-3">
-                        {{ wtf.form_field(form.priceMin, class='form-control', placeholder='Cena: od') }}
-                    </div>
-                    <div class="form-group col-md-3">
-                        {{ wtf.form_field(form.priceMax, class='form-control', placeholder='Cena: do') }}
-                    </div>
-                    <div class="form-group col-md-3">
-                        {{ wtf.form_field(form.pricePerM2min, class='form-control', placeholder='Cena za m2: od') }}
-                    </div>
-                    <div class="form-group col-md-3">
-                        {{ wtf.form_field(form.pricePerM2max, class='form-control', placeholder='Cena za m2: do') }}
+                    <div class="col md-3">
+                        <div class="form-group col-md-3">
+                            {{ wtf.form_field(form.source, class='form-control', placeholder='Źródło oferty') }}
+                        </div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" onclick="$('#loading').show();">Szukaj</button>

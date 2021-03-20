@@ -31,13 +31,13 @@ def runFlatSearch(search_params):
     Links = OLX.getOfferLinks(search_params)
     for link in Links:
         if 'www.otodom.pl' in link:
-            offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOTODOM(link)
+            offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOTODOM(link)
         else:
-            # offerTitle, flatSize, roomsNo, price, offerSource = OLX.getOfferDetailsOLX(link)
-            pass
+            print('Current link: ' + link)
+            offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOLX(link)
         pricePerM2 = str(round(float(price) / float(flatSize), 0))
         offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
         db.session.add(offer)
         db.session.add(offerCurrent)
 

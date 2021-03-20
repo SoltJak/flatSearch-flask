@@ -54,36 +54,44 @@ def getOfferLinks(queryCriteria):
 # Function to get required data from a single offer
 def getOfferDetailsOLX(url):
     offerSoup = downloadPage(url)
-    
-    detailsList = list(offerSoup.find_all('li', class_='offer-details__item'))
+
+    patternSize = re.compile('(Powierzchnia:\s)(\d+?)(,)?(\d+?)?')
+    patternRooms = re.compile('(Liczba pokoi:\s)(\d+?)')
+    patternPrice = re.compile('(\d+?)(\s)?(\d+?)?(\s)?(\d+?)?(\szł)')
+
+    # 1. Find offer title
+    offerTitle = offerSoup.h1.getText().strip()
+
+    detailsList = list(offerSoup.find_all('p'))
     for textLine in detailsList:
-        
+
         # 2. Find flat size
-        if textLine.find('span', class_='offer-details__name').getText() == 'Powierzchnia':
-            flatSizeRaw = textLine.find('strong', class_='offer-details__value').getText().strip()
-            flatSize = ''.join(flatSizeRaw.split()[0:-1])
-            pattern = re.compile('(\d+?)(,)(\d*\d$)')
-            if pattern.search(flatSize) != None:
-                flatSize = pattern.search(flatSize)[1] + '.' + pattern.search(flatSize)[3]
+        if patternSize.search(textLine.getText()) != None:
+            flatSize = textLine.getText().replace('Powierzchnia:','').replace(',','.').strip()
             
         #3. Find number of rooms
-        if textLine.find('span', class_='offer-details__name').getText() == 'Liczba pokoi':
-            roomsNoRaw = textLine.find('strong', class_='offer-details__value').getText().strip()
-            roomsNo = roomsNoRaw.split()[0]
+        if patternRooms.search(textLine.getText()) != None:
+            roomsNo = textLine.getText().replace('Liczba pokoi:','').replace(',','.').strip()
 
         #4. Find offer source
-        elif textLine.find('span', class_='offer-details__name').getText() == 'Oferta od':
-            offerSource = textLine.find('strong', class_='offer-details__value').getText().strip()
+        if textLine.getText() == 'Prywatne':
+            offerSource = 'Prywatne'
+        elif textLine.getText() == 'Firmowe':
+            offerSource = 'Agencja'
 
     #5. Find price of flat
-    priceRaw = offerSoup.find('div', class_='pricelabel').strong.getText()
-    price = ''.join(priceRaw.split()[0:-1])
+    priceList = list(offerSoup.find_all('h3'))
+    for line in priceList:
+        if patternPrice.search(line.getText()) != None:
+            price = line.getText().replace('zł','').replace(' ','').strip()
 
-    pattern = re.compile('(\d+?)(,)(\d*\d$)')
-    if pattern.search(price) != None:
-        price = pattern.search(price)[1] + '.' + pattern.search(price)[3]
+    #6. Find link to main picture
+    if offerSoup.find('div', class_='swiper-zoom-container') != None:
+        pictureLink = offerSoup.find('div', class_='swiper-zoom-container').find('img').get('src')
+    else:
+        pictureLink = ''
 
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink
 
 def getOfferDetailsOTODOM(url):
     offerSoup = downloadPage(url)
@@ -113,9 +121,9 @@ def getOfferDetailsOTODOM(url):
     price = offerSoup.select('strong[aria-label="Cena"]')[0].getText().replace(' ','').replace('zł','').strip()
 
     #6. Find link to main picture
-    # if offerSoup.find('img', class_='gallery__mainImage') != None:
-    #     pictureLink = offerSoup.find('img', class_='gallery__mainImage').get('src')
-    # else:
-    pictureLink = ''
+    if offerSoup.find('picture').find('img').get('src') != None:
+        pictureLink = offerSoup.find('picture').find('img').get('src')
+    else:
+        pictureLink = ''
 
-    return offerTitle, flatSize, roomsNo, price, offerSource
+    return offerTitle, flatSize, roomsNo, price, offerSource, pictureLink
