@@ -2,7 +2,9 @@
 # OLX.py - defines functions to scrape OLX.pl in order
 # to download requested information from flat offers
 
-import bs4, requests, re, json, pprint
+import bs4, requests, re, json, pprint, logging
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s -  %(levelname)s -  %(message)s')
 
 baseURL = 'https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/warszawa/?'
 Links = []
@@ -55,19 +57,22 @@ def getOfferLinks(queryCriteria):
 def getOfferDetailsOLX(url):
     offerSoup = downloadPage(url)
 
-    patternSize = re.compile('(Powierzchnia:\s)(\d+?)(,)?(\d+?)?')
+    patternSize = re.compile('(Powierzchnia:\s)(\d*)(,)*(\d*)*')
     patternRooms = re.compile('(Liczba pokoi:\s)(\d+?)')
     patternPrice = re.compile('(\d+?)(\s)?(\d+?)?(\s)?(\d+?)?(\szł)')
 
     # 1. Find offer title
     offerTitle = offerSoup.h1.getText().strip()
 
-    detailsList = list(offerSoup.find_all('p'))
+    detailsList = list(offerSoup.find_all('li'))
+    logging.debug(detailsList)
     for textLine in detailsList:
 
         # 2. Find flat size
         if patternSize.search(textLine.getText()) != None:
+            flatSize = patternSize.search(textLine.getText()).group(0).replace('Powierzchnia:','').replace(',','.').strip()
             flatSize = textLine.getText().replace('Powierzchnia:','').replace(',','.').strip()
+            
             
         #3. Find number of rooms
         if patternRooms.search(textLine.getText()) != None:

@@ -4,7 +4,7 @@
 from app import app, db
 from app.scraping_scripts import NieruchomosciOnline, OLX, Gratka, Gumtree, Sprzedajemy, DomiPorta
 from app.models import User, Flat, Flatcurrent
-import bs4, requests, json, logging, pprint
+import bs4, requests, json, logging, pprint, re
 import logging, threading
 
 def runFlatSearch(search_params):
@@ -29,10 +29,12 @@ def runFlatSearch(search_params):
 
     # 2. OLX.pl
     Links = OLX.getOfferLinks(search_params)
+    linkPattern = re.compile('(\S+?)(.html)')
     for link in Links:
         if 'www.otodom.pl' in link:
             offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOTODOM(link)
         else:
+            link = linkPattern.search(link).group(0)
             print('Current link: ' + link)
             offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOLX(link)
         pricePerM2 = str(round(float(price) / float(flatSize), 0))
