@@ -53,6 +53,28 @@ def getOfferLinks(queryCriteria):
         Links.append(textLine.h3.a.get('href'))
     return Links
 
+# Functions to perform simplified scraping based on search results page
+def getOfferDetailsOLXliteList(queryCriteria):
+    url = SearchUrl(queryCriteria)
+    soup = downloadPage(url)
+    tempList = list(soup.find_all('tr', class_='wrap'))
+    return tempList    
+
+def getOfferDetailsOLXlite(textLine):
+    # 1. Find offer title
+    offerTitle = textLine.strong.getText().strip()
+    # 2. Find price
+    price = textLine.find('p', class_="price").getText().replace(' ','').replace('zł','').strip()
+    # 3. Get picture
+    if textLine.find('img') != None:
+        pictureLink = textLine.find('img').get('src')
+    else:
+        pictureLink = ''
+    # Assign empty data for items not in a page
+    flatSize = 'B/D'
+    offerSource = 'B/D'
+    return offerTitle, flatSize, price, offerSource, pictureLink 
+
 # Function to get required data from a single offer
 def getOfferDetailsOLX(url):
     offerSoup = downloadPage(url)

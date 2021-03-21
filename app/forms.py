@@ -18,5 +18,5 @@ class SearchForm(FlaskForm):
     pricePerM2min = DecimalField('Cena/m2 min', places=0)
     pricePerM2max = DecimalField('Cena/m2 max', places=0)
     market = SelectField('Rynek', choices=[('wtorny', 'Wtórny'), ('pierwotny', 'Pierwotny')])
-    source = SelectMultipleField('Oferty z', choices=[('gratka', 'Gratka.pl'), ('gumtree', 'Gumtree.pl'), ('domiporta', 'Domiporta.pl'), ('nierOnline', 'Nieruchomości-Online.pl'), ('olx', 'OLX.pl'), ('sprzedajemy', 'Sprzedajemy.pl')])
+    source = SelectMultipleField('Oferty z', choices=[('gratka', 'Gratka.pl'), ('gumtree', 'Gumtree.pl'), ('domiporta', 'Domiporta.pl'), ('olx', 'OLX.pl & Otodom.pl'), ('sprzedajemy', 'Sprzedajemy.pl'), ('nierOnline', 'Nieruchomości-Online.pl')])
     submit = SubmitField('Szukaj')

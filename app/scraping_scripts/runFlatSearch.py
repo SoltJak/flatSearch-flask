@@ -30,18 +30,28 @@ def runFlatSearch(search_params):
     # 2. OLX.pl
     Links = OLX.getOfferLinks(search_params)
     linkPattern = re.compile('(\S+?)(.html)')
+    # Collect offers from links
     for link in Links:
         if 'www.otodom.pl' in link:
             offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOTODOM(link)
+            pricePerM2 = str(round(float(price) / float(flatSize), 0))
+            offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
+            offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
+            db.session.add(offer)
+            db.session.add(offerCurrent) 
         else:
-            link = linkPattern.search(link).group(0)
-            print('Current link: ' + link)
-            offerTitle, flatSize, roomsNo, price, offerSource, pictureLink = OLX.getOfferDetailsOLX(link)
-        pricePerM2 = str(round(float(price) / float(flatSize), 0))
-        offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link)
-        offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=roomsNo, size=flatSize, price=price, pricePerM2=pricePerM2, link=link, pictureLink=pictureLink)
-        db.session.add(offer)
-        db.session.add(offerCurrent)
+            pass
+   
+    # # Collect offers from OLX search page (OLX offers alone not working) - not working now since OLX blocks scraping
+    # OLXlist = OLX.getOfferDetailsOLXliteList(search_params)
+    # for textLine in OLXlist:
+    #     link = textLine.h3.a.get('href')
+    #     if 'olx.pl' in link:
+    #         offerTitle, flatSize, price, offerSource, pictureLink = OLX.getOfferDetailsOLXlite(textLine)
+    #         offer = Flat(title=offerTitle, district=search_params['location'], roomsNo=search_params['roomsNoSearch'], size=flatSize, price=price, pricePerM2='BD', link=link)
+    #         offerCurrent = Flatcurrent(title=offerTitle, district=search_params['location'], roomsNo=search_params['roomsNoSearch'], size=flatSize, price=price, pricePerM2='BD', link=link, pictureLink=pictureLink)
+    #         db.session.add(offer)
+    #         db.session.add(offerCurrent) 
 
     # 3. Gratka.pl
     if 'gratka' in search_params['source']:
