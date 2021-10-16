@@ -4,6 +4,13 @@ from app.forms import LoginForm, SearchForm
 from app.models import User, Flat, Flatcurrent
 from app.scraping_scripts import runFlatSearch
 import json
+import random, string
+
+def get_random_string(length):
+# get random string pf length 20 with letters, digits, and symbols
+    characters = string.ascii_letters + string.digits + string.punctuation
+    searchString = ''.join(random.choice(characters) for i in range(length))
+    return searchString
 
 @app.route('/')
 @app.route('/index')
@@ -37,6 +44,7 @@ def login():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchForm()
+    searchString = get_random_string(10)
     search_paramsTemp = {}
     if form.validate_on_submit():
         search_paramsTemp["location"] = request.form["location"]
@@ -49,6 +57,7 @@ def search():
         search_paramsTemp["flatSizeMax"] = request.form["flatSizeMax"]
         search_paramsTemp["market"] = request.form["market"]
         search_paramsTemp["source"] = request.form.getlist("source")
+        search_paramsTemp["searchCode"] = searchString 
         search_params = json.dumps(search_paramsTemp)
 
         # # Clear current database:
@@ -82,5 +91,11 @@ def search_results():
     search_paramsTemp1 = request.args.get('search_params')
     search_params = json.loads(search_paramsTemp1)
     runFlatSearch.runFlatSearch(search_params)
-    flatsCurrent = Flatcurrent.query.all()
+    # flatsCurrent = Flatcurrent.query.all()
+    # print(flatsCurrent[0].roomsNo)
+    flatsCurrent = Flat.query.all()
+    print('Pierwsze: ' + str(flatsCurrent[0]) + ', ORAZ: ' + str(flatsCurrent[-1]))
+    flatsCurrent = Flat.query.filter(Flat.searchCode == search_params['searchCode']).all()
+    print('Search code: ' + search_params['searchCode'])
+    print('Wybrane: ' + str(flatsCurrent[0]) + ', ORAZ: ' + str(flatsCurrent[-1]))
     return render_template('search_results.html', title='Wyniki wyszukiwania', search_params=json.loads(request.args.get('search_params')), flatsCurrent=flatsCurrent)
