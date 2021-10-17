@@ -95,7 +95,16 @@ def search_results():
     # print(flatsCurrent[0].roomsNo)
     flatsCurrent = Flat.query.all()
     print('Pierwsze: ' + str(flatsCurrent[0]) + ', ORAZ: ' + str(flatsCurrent[-1]))
-    flatsCurrent = Flat.query.filter(Flat.searchCode == search_params['searchCode']).all()
+    flatsCurrent = Flat.query.filter((Flat.searchCode == search_params['searchCode']) \
+        & (Flat.district == search_params['location']) \
+        & (Flat.roomsNo == search_params['roomsNoSearch']) \
+        & (float(Flat.size) >= float(search_params['flatSizeMin'])) \
+        & (float(Flat.size) <= float(search_params['flatSizeMax'])) \
+        & (float(Flat.price) >= float(search_params['priceMin'])) \
+        & (float(Flat.price) <= float(search_params['priceMax'])) \
+        & (float(Flat.pricePerM2) >= float(search_params['pricePerM2min'])) \
+        # & (float(Flat.pricePerM2) <= float(search_params['pricePerM2max']))).all()
+        & (float(Flat.pricePerM2) >= float(search_params['pricePerM2min']))).all()
     print('Search code: ' + search_params['searchCode'])
     print('Wybrane: ' + str(flatsCurrent[0]) + ', ORAZ: ' + str(flatsCurrent[-1]))
     return render_template('search_results.html', title='Wyniki wyszukiwania', search_params=json.loads(request.args.get('search_params')), flatsCurrent=flatsCurrent)

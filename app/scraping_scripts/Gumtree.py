@@ -69,6 +69,7 @@ def getOfferDetailsGumtree(url):
         #4. Find offer source
         elif textLine.find('span', class_='name').getText() == 'Na sprzedaż przez':
             offerSource = textLine.find('span', class_='value').getText()
+        offerSource = 'Agencja'
 
     #5. Find price of flat
     priceRaw = offerSoup.find('span', class_='amount').getText()
