@@ -23,6 +23,9 @@ class Flat(db.Model):
 
     def __repr__(self):
         return 'Mieszkanie: {}m2, pokoi: {}, w cenie: {}PLN, Dzielnica: {}, Kod Wyszukiwania: {}'.format(self.size, self.roomsNo, self.price, self.district, self.searchCode)
+    
+    # @floatNumbers
+
 
 class Flatcurrent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
