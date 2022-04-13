@@ -30,9 +30,9 @@ Therefore, its main goal is to reduce users' (someone who looks for a flat) time
 ![Main_screen](https://raw.githubusercontent.com/SoltJak/flatSearch-flask/master/_PRESENTATION/Search_results.png)
 ## Roadmap
 
-- Multi-threading to improve performance (less search time)
+- Multi-threading to improve performance (decrease search time)
 
-- Option to only show new/unique (vs. previous search attempts with same queary parameters)
+- Option to only show new/unique offers (vs. previous search attempts with same queary parameters)
 
 - Option to automatically send emails if an offer (matching user's specification) appears
 
